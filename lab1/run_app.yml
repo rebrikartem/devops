@@ -1,0 +1,59 @@
+- name: Deploy Django application on app servers
+  hosts: app
+  become: true
+  vars:
+    app_dir: "/opt/django-locallibrary"
+    superuser_name: "admin"
+    superuser_email: "admin@example.com"
+    superuser_password: "password123"
+
+  tasks:
+    - name: Ensure Python 3 and pip are installed
+      apt:
+        name: "{{ item }}"
+        state: present
+        update_cache: yes
+      loop:
+        - python3
+        - python3-pip
+
+    - name: Install Python dependencies
+      pip:
+        requirements: "{{ app_dir }}/requirements.txt"
+        executable: pip3
+
+    - name: Run Django migrations
+      command: python3 manage.py makemigrations
+      args:
+        chdir: "{{ app_dir }}"
+
+    - name: Apply Django migrations
+      command: python3 manage.py migrate
+      args:
+        chdir: "{{ app_dir }}"
+
+    - name: Collect static files
+      command: python3 manage.py collectstatic --noinput
+      args:
+        chdir: "{{ app_dir }}"
+
+    - name: Run Django tests
+      command: python3 manage.py test
+      args:
+        chdir: "{{ app_dir }}"
+
+    - name: Create Django superuser
+      command: >
+        python3 manage.py createsuperuser --noinput --username {{ superuser_name }} --email {{ superuser_email }}
+      args:
+        chdir: "{{ app_dir }}"
+      environment:
+        DJANGO_SUPERUSER_PASSWORD: "{{ superuser_password }}"
+      ignore_errors: true
+
+    - name: Start Django development server
+      command: python3 manage.py runserver 0.0.0.0:8000
+      args:
+        chdir: "{{ app_dir }}"
+      async: 3600
+      poll: 0

@@ -1,0 +1,16 @@
+- name: Clone Django Local Library tutorial repo
+  hosts: app
+  become: true
+  tasks:
+    - name: Ensure git is installed
+      apt:
+        name: git
+        state: present
+        update_cache: yes
+
+    - name: Clone the Django Local Library tutorial repository
+      git:
+        repo: https://github.com/mdn/django-locallibrary-tutorial.git
+        dest: /opt/django-locallibrary
+        version: main
+        update: yes
