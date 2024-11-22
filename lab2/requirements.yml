@@ -1,0 +1,4 @@
+---
+- name: docker
+  src: git+https://github.com/igormatevosian/docker-role-ansible.git
+  version: main
