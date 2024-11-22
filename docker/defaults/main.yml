@@ -1,0 +1,7 @@
+---
+docker_packages:
+  - docker-ce
+  - docker-ce-cli
+  - containerd.io
+docker_repo_url: "https://download.docker.com/linux/ubuntu"
+docker_repo: "deb [arch=amd64] {{ docker_repo_url }} {{ ansible_distribution_release }} stable"
