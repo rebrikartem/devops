@@ -1,0 +1,38 @@
+---
+- name: Set up web servers
+  hosts: web
+  become: yes
+  roles:
+    - nginx
+
+- name: Set up application servers
+  hosts: app
+  become: yes
+  roles:
+    - docker
+  tasks:
+    - name: Run Django application in Docker
+      docker_container:
+        name: django_app
+        image: timurbabs/django
+        state: started
+        restart_policy: always
+        ports:
+          - "8000:8000"
+        volumes:
+          - /home/vagrant/app:/app
+        env:
+          DEBUG: '0'
+          ALLOWED_HOSTS: '*'
+          STATIC_ROOT: '/app/static'
+      notify:
+        - Collect static files
+
+  handlers:
+    - name: Collect static files
+      docker_container:
+        name: django_app
+        image: django_app_image
+        command: python manage.py collectstatic --noinput
+        volumes:
+          - /home/vagrant/app:/app
