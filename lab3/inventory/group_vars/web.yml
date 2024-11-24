@@ -1,0 +1,6 @@
+---
+nginx_site_template_file: "~/inventory/templates/nginx.conf.j2"
+
+nginx_site_available_dir: "/etc/nginx/sites-available/default"
+
+nginx_site_enabled_dir: "/etc/nginx/sites-enabled/default"
