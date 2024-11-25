@@ -1,0 +1,19 @@
+---
+- hosts: app
+  become: yes
+  roles:
+    - docker
+  tasks:
+    - name: Run Django application in Docker
+      docker_container:
+        name: django_app
+        image: timurbabs/django
+        state: started
+        restart_policy: always
+        ports:
+          - "8000:8000"
+
+- hosts: web
+  become: yes
+  roles:
+    - nginx
