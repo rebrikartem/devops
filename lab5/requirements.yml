@@ -1,0 +1,4 @@
+---
+- name: postgresql
+  src: git+https://github.com/igormatevosian/postgresql-role-ansible.git
+  version: main
