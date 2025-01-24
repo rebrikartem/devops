@@ -1,0 +1,11 @@
+- name: Setup postgresql master server
+  hosts: postgresql_master
+  become: true
+  roles:
+    - postgresql
+
+- name: Setup postgresql replica server
+  hosts: postgresql_replica
+  become: true
+  roles:
+    - postgresql

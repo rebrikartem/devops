@@ -1,0 +1,23 @@
+postgresql_hba_extra_entries:
+  - type: host
+    database: all
+    user: all
+    address: 0.0.0.0/0
+    method: scram-sha-256
+  - type: host
+    database: replication
+    user: all
+    address: 0.0.0.0/0
+    method: scram-sha-256
+
+postgresql_config:
+  listen_addresses: "*"
+  max_connections: 10
+  shared_buffers: 64MB
+  wal_level: hot_standby
+  archive_mode: "on"
+  archive_command: "cd ."
+  max_wal_senders: 8
+  hot_standby: "on"
+
+postgresql_cluster: true
