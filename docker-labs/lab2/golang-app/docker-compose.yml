@@ -4,9 +4,11 @@ services:
   web:
     build: .
     ports:
-      - "8080:8080"
+      - "${APP_PORT}:${APP_PORT}"
     environment:
-      - DATABASE_URL=postgres://myuser:mypassword@db/mydatabase?sslmode=disable
+      - DATABASE_URL=${DATABASE_URL}
+    env_file:
+      - .env
     depends_on:
       db:
         condition: service_healthy
@@ -14,13 +16,13 @@ services:
   db:
     image: postgres:13-alpine
     environment:
-      POSTGRES_USER: myuser
-      POSTGRES_PASSWORD: mypassword
-      POSTGRES_DB: mydatabase
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U myuser -d mydatabase"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 5s
       timeout: 5s
       retries: 5

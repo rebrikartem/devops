@@ -7,8 +7,8 @@ RUN go mod download
 COPY cmd ./cmd
 COPY migrations ./migrations
 COPY entrypoint.sh ./
-RUN go build -o /app/main ./cmd
 
+RUN go build -o /app/main ./cmd
 
 FROM alpine:3.17
 WORKDIR /app
@@ -21,5 +21,8 @@ COPY --from=builder /app/migrations ./migrations
 
 RUN adduser -D myuser
 USER myuser
+
+ENV APP_PORT=8080
+EXPOSE ${APP_PORT}
 
 ENTRYPOINT ["./entrypoint.sh"]

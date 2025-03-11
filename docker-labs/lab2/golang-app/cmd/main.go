@@ -6,10 +6,10 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
-	_ "github.com/lib/pq"
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
+	_ "github.com/lib/pq"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -42,7 +42,11 @@ func main() {
 	r.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"message": "Hello, World!"})
 	})
-	log.Fatal(r.Run(":8080"))
+	port := os.Getenv("APP_PORT")
+	if port == "" {
+		port = "8080" // Значение по умолчанию
+	}
+	log.Fatal(r.Run(":" + port))
 }
 
 func runMigrations() {
