@@ -5,11 +5,8 @@ if [ -z "$DATABASE_URL" ]; then
   exit 1
 fi
 
-if [ "$1" = "migrate" ]; then
-  echo "Running migrations..."
-  /app/main migrate
-fi
+echo "Running migrations..."
+/app/main migrate
 
-# Запуск приложения
 echo "Starting application on port ${APP_PORT}..."
 exec /app/main
