@@ -1,0 +1,17 @@
+FROM alpine:3.17 AS runtime
+
+WORKDIR /app
+
+RUN apk add --no-cache postgresql-client
+
+COPY main . 
+COPY entrypoint.sh .
+COPY ./migrations .
+
+RUN adduser -D myuser
+USER myuser
+
+ENV APP_PORT=8080
+EXPOSE ${APP_PORT}
+
+ENTRYPOINT ["./entrypoint.sh"]
